@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <style>
+    body { font-family: Arial; background:#fafafa; text-align:center; }
+    .profile { margin-top:40px; }
+  </style>
+</head>
+<body>
+
+<div class="profile">
+  <h2 id="username"></h2>
+  <p id="counts"></p>
+  <button onclick="followUser()">Follow</button>
+</div>
+
+<script>
+const userId = "USER_ID_HERE";
+
+async function loadProfile() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`http://localhost:5000/users/${userId}`, {
+    headers:{ Authorization:"Bearer "+token }
+  });
+
+  const u = await res.json();
+  username.innerText = "@"+u.username;
+  counts.innerText = `Followers: ${u.followers.length} | Following: ${u.following.length}`;
+}
+
+async function followUser() {
+  const token = localStorage.getItem("token");
+  await fetch(`http://localhost:5000/follow/${userId}`, {
+    method:"POST",
+    headers:{ Authorization:"Bearer "+token }
+  });
+  loadProfile();
+}
+
+loadProfile();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Post Detail</title>
+  <style>
+    body { font-family: Arial; background:#fafafa; }
+    .post { width:400px; margin:20px auto; background:white; padding:10px; }
+    img { width:100%; }
+  </style>
+</head>
+<body>
+
+<div class="post">
+  <img id="img">
+  <p id="caption"></p>
+  <h4>Comments</h4>
+  <div id="comments"></div>
+  <input id="commentText" placeholder="Add comment">
+  <button onclick="addComment()">Post</button>
+</div>
+
+<script>
+const id = new URLSearchParams(location.search).get("id");
+
+async function loadPost() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`http://localhost:5000/posts/${id}`, {
+    headers:{ Authorization:"Bearer "+token }
+  });
+
+  const p = await res.json();
+  img.src = p.imageUrl;
+  caption.innerText = p.caption;
+  comments.innerHTML = p.comments.map(
+    c => `<p><b>@${c.user}</b> ${c.text}</p>`
+  ).join("");
+}
+
+async function addComment() {
+  const token = localStorage.getItem("token");
+
+  await fetch(`http://localhost:5000/comment/${id}`, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer "+token
+    },
+    body: JSON.stringify({ text: commentText.value })
+  });
+
+  commentText.value = "";
+  loadPost();
+}
+
+loadPost();
+</script>
+
+</body>
+</html>

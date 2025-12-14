@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <style>
+    body { font-family: Arial; background:#fafafa; }
+    .post {
+      width: 90%; max-width: 400px;
+      margin: 20px auto; background:white;
+      padding: 10px; border:1px solid #ddd;
+    }
+    img { width:100%; }
+  </style>
+</head>
+<body>
+
+<h2 style="text-align:center">Home Feed</h2>
+<div id="feed"></div>
+
+<script>
+async function loadFeed() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("http://localhost:5000/feed", {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  const posts = await res.json();
+  feed.innerHTML = "";
+
+  posts.forEach(p => {
+    feed.innerHTML += `
+      <div class="post">
+        <img src="${p.imageUrl}">
+        <p><b>@${p.user}</b> ${p.caption}</p>
+        <p>❤️ ${p.likes.length}</p>
+        <button onclick="likePost('${p._id}')">Like</button>
+        <a href="post-detail.html?id=${p._id}">View</a>
+      </div>`;
+  });
+}
+
+async function likePost(id) {
+  const token = localStorage.getItem("token");
+  await fetch(`http://localhost:5000/like/${id}`, {
+    method:"POST",
+    headers:{ Authorization:"Bearer "+token }
+  });
+  loadFeed();
+}
+
+loadFeed();
+</script>
+
+</body>
+</html>

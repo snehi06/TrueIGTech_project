@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signup</title>
+  <style>
+    body { font-family: Arial; background:#f4f4f4; }
+    .box {
+      width: 300px; margin: 100px auto; padding: 20px;
+      background: white; border-radius: 8px;
+    }
+    input, button {
+      width: 100%; padding: 10px; margin: 10px 0;
+    }
+    button { background:#3897f0; color:white; border:none; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Signup</h2>
+  <input id="username" placeholder="Username">
+  <input id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="signupUser()">Signup</button>
+  <p>Already have account? <a href="login.html">Login</a></p>
+</div>
+
+<script>
+async function signupUser() {
+  const res = await fetch("http://localhost:5000/signup", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      username: username.value,
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  if (res.ok) {
+    alert("Signup successful");
+    window.location.href = "login.html";
+  } else {
+    alert("Signup failed");
+  }
+}
+</script>
+
+</body>
+</html>
