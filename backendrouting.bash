@@ -1,0 +1,9 @@
+POST   /signup
+POST   /login
+GET    /feed
+POST   /posts
+POST   /like/:id
+POST   /comment/:id
+GET    /posts/:id
+GET    /users/:id
+POST   /follow/:id
